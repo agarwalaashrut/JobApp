@@ -1,536 +1,328 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application Tracker Dashboard</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Job Application Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    import { ChevronDown, Menu, X } from "lucide-react";
-
-    <ChevronDown className="w-4 h-4" />
-
-
     <style>
-        /* Custom styles for the dashboard */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
         }
-        /* Style for the draggable cards */
-        .kanban-card.dragging {
+        .kanban-column {
+            min-width: 240px;
+            flex: 1;
+        }
+        .job-card {
+            cursor: grab;
+            transition: all 0.2s ease-in-out;
+        }
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .job-card.dragging {
             opacity: 0.5;
             transform: rotate(2deg);
         }
-        /* Custom scrollbar for Kanban columns */
-        .kanban-column-content::-webkit-scrollbar {
-            width: 6px;
+        .modal-backdrop {
+            transition: opacity 0.3s ease;
         }
-        .kanban-column-content::-webkit-scrollbar-track {
-            background: #f1f5f9; /* slate-100 */
-            border-radius: 10px;
+        /* Custom scrollbar for webkit browsers */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
         }
-        .kanban-column-content::-webkit-scrollbar-thumb {
-            background: #cbd5e1; /* slate-300 */
-            border-radius: 10px;
-        }
-        .kanban-column-content::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; /* slate-400 */
-        }
-        /* Simple animation for modal */
-        .modal-enter {
-            animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: #4a5568;
+            border-radius: 20px;
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="flex h-screen bg-slate-50">
+    <!-- Main Container -->
+    <div id="app" class="flex h-screen">
+
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-slate-200 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:relative lg:inset-0">
+        <aside class="w-64 flex-shrink-0 bg-gray-800 text-white flex flex-col">
             <!-- Logo -->
-            <div class="flex items-center justify-center h-16 px-6 border-b border-slate-200">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="briefcase" class="w-7 h-7 text-indigo-600"></i>
-                    <span class="text-xl font-semibold text-slate-800">JobTrack</span>
+            <div class="flex items-center justify-center h-16 border-b border-gray-700 flex-shrink-0">
+                 <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                    </svg>
+                    <h1 class="text-2xl font-bold text-white">JobTrackr</h1>
                 </div>
             </div>
             <!-- Navigation -->
-            <nav class="py-6 px-4">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg">
-                            <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">
-                            <i data-lucide="package" class="w-5 h-5 mr-3"></i>
-                            Your Collection
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-3"></i>
-                            CV Builder
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">
-                            <i data-lucide="lightbulb" class="w-5 h-5 mr-3"></i>
-                            Interview Prep
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">
-                            <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
-                            Settings
-                        </a>
-                    </li>
-                </ul>
+            <nav class="flex-1 overflow-y-auto sidebar-nav p-4 space-y-2">
+                <a href="#" class="flex items-center px-4 py-2 text-gray-100 bg-gray-700 rounded-lg">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h7.5" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3M3.75 21h16.5M12 3v18" />
+                    </svg>
+                    Analytics
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 12.75h.008v.008H12v-.008z" />
+                    </svg>
+                    Calendar
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-1.007 1.11-1.226l.558-.223c.55-.22 1.158-.22 1.708 0l.558.223c.549.22 1.02.684 1.11 1.226l.09.542-.09.542c-.09.542-.56 1.007-1.11 1.226l-.558.223c-.55.22-1.158.22-1.708 0l-.558-.223c-.549-.22-1.02-.684-1.11-1.226l-.09-.542z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.071-2.071a4.5 4.5 0 00-6.364-6.364l-2.071-2.071M15.75 15.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.875m-1.5-1.5l-2.071-2.071a4.5 4.5 0 00-6.364 6.364l2.071 2.071" />
+                    </svg>
+                    Settings
+                </a>
             </nav>
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700 flex-shrink-0">
+                <a href="#" class="flex items-center group">
+                    <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/100x100/7c3aed/ffffff?text=U" alt="User avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-white">User Name</p>
+                        <p class="text-xs font-medium text-gray-400 group-hover:text-gray-300 transition-colors">View profile</p>
+                    </div>
+                </a>
+            </div>
         </aside>
 
-        <!-- Main content -->
+        <!-- Content Wrapper -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top navigation bar -->
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-sm border-b border-slate-200">
-                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-                    <!-- Mobile menu button -->
-                    <button id="sidebar-toggle" class="lg:hidden text-slate-500 hover:text-slate-600">
-                        <span class="sr-only">Open sidebar</span>
-                        <i data-lucide="menu" class="w-6 h-6"></i>
-                    </button>
-                    <!-- Search bar -->
-                    <div class="flex-1 flex justify-center px-4 lg:px-0">
-                        <div class="w-full max-w-xs lg:max-w-md">
-                            <label for="search" class="sr-only">Search</label>
-                            <div class="relative">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                                </div>
-                                <input id="search" name="search" class="block w-full bg-slate-100 border border-transparent rounded-lg py-2 pl-10 pr-3 text-sm placeholder-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Search applications, companies..." type="search">
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Profile dropdown -->
-                    <div class="relative">
-                        <button id="profile-button" class="flex items-center space-x-2">
-                            <img class="h-8 w-8 rounded-full" src="https://placehold.co/32x32/E0E7FF/4F46E5?text=A" alt="User avatar">
-                        </button>
-                        <div id="profile-dropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu">
-                            <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem">Your Profile</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem">Settings</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem">Sign out</a>
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 shadow-sm">
+                <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-end items-center h-16">
+                        <div class="flex items-center space-x-4">
+                             <button id="add-new-btn" class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                </svg>
+                                New Application
+                            </button>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <!-- Main content area -->
-            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-                <!-- Page Header -->
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Your Applications</h1>
-                    <div class="flex items-center space-x-4 mt-4 sm:mt-0">
-                        <!-- View Toggle -->
-                        <div class="flex items-center p-1 bg-slate-200 rounded-lg">
-                            <button id="kanban-view-btn" class="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-md shadow">Kanban</button>
-                            <button id="table-view-btn" class="px-3 py-1 text-sm font-medium text-slate-600 rounded-md">Table</button>
-                        </div>
-                        <button id="add-new-btn" class="flex items-center justify-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <i data-lucide="plus" class="w-5 h-5 mr-2 -ml-1"></i>
-                            Add New Application
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Kanban Board View -->
-                <div id="kanban-view">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                        <!-- Kanban Columns -->
-                        <div class="kanban-column bg-white rounded-xl shadow-sm" data-column-id="interested">
-                            <h2 class="text-lg font-semibold text-slate-800 p-4 border-b border-slate-200">Interested (2)</h2>
-                            <div class="kanban-column-content p-4 space-y-4 h-[calc(100vh-250px)] overflow-y-auto">
-                                <!-- Kanban Cards -->
-                                <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="1">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/c7d2fe/3730a3?text=G" class="w-10 h-10 rounded-md" alt="Google Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Google</p>
-                                                <p class="text-sm text-slate-600">Software Engineer Intern</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-200 rounded-full">To Apply</span>
-                                        <span class="text-slate-500">Deadline: Aug 30</span>
-                                    </div>
-                                </div>
-                                <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="2">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/a5f3fc/0e7490?text=V" class="w-10 h-10 rounded-md" alt="Vercel Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Vercel</p>
-                                                <p class="text-sm text-slate-600">Frontend Developer</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-slate-700 bg-slate-200 rounded-full">Researching</span>
-                                        <span class="text-slate-500">Saved: Aug 01</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="kanban-column bg-white rounded-xl shadow-sm" data-column-id="applied">
-                            <h2 class="text-lg font-semibold text-slate-800 p-4 border-b border-slate-200">Applied (1)</h2>
-                            <div class="kanban-column-content p-4 space-y-4 h-[calc(100vh-250px)] overflow-y-auto">
-                                <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="3">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/dcfce7/166534?text=F" class="w-10 h-10 rounded-md" alt="Figma Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Figma</p>
-                                                <p class="text-sm text-slate-600">Product Designer</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-sky-700 bg-sky-100 rounded-full">Applied</span>
-                                        <span class="text-slate-500">Applied: Jul 25</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="kanban-column bg-white rounded-xl shadow-sm" data-column-id="interview">
-                            <h2 class="text-lg font-semibold text-slate-800 p-4 border-b border-slate-200">Interview (2)</h2>
-                            <div class="kanban-column-content p-4 space-y-4 h-[calc(100vh-250px)] overflow-y-auto">
-                               <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="4">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/fee2e2/991b1b?text=A" class="w-10 h-10 rounded-md" alt="Adobe Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Adobe</p>
-                                                <p class="text-sm text-slate-600">UX/UI Designer Intern</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Interview Scheduled</span>
-                                        <span class="text-slate-500">On Aug 15</span>
-                                    </div>
-                                </div>
-                                <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="5">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/e0e7ff/3730a3?text=M" class="w-10 h-10 rounded-md" alt="Microsoft Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Microsoft</p>
-                                                <p class="text-sm text-slate-600">Cloud Solutions Architect</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Technical Screen</span>
-                                        <span class="text-slate-500">Completed</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="kanban-column bg-white rounded-xl shadow-sm" data-column-id="offer">
-                            <h2 class="text-lg font-semibold text-slate-800 p-4 border-b border-slate-200">Offer (1)</h2>
-                            <div class="kanban-column-content p-4 space-y-4 h-[calc(100vh-250px)] overflow-y-auto">
-                                <div class="kanban-card bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm cursor-grab" draggable="true" data-card-id="6">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="https://placehold.co/40x40/f3e8ff/6b21a8?text=S" class="w-10 h-10 rounded-md" alt="Stripe Logo">
-                                            <div>
-                                                <p class="font-semibold text-slate-900">Stripe</p>
-                                                <p class="text-sm text-slate-600">Backend Engineer</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex items-center justify-between text-sm">
-                                        <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Offer Received</span>
-                                        <span class="text-slate-500">Received: Aug 05</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="kanban-column bg-white rounded-xl shadow-sm" data-column-id="rejected">
-                            <h2 class="text-lg font-semibold text-slate-800 p-4 border-b border-slate-200">Rejected (0)</h2>
-                            <div class="kanban-column-content p-4 space-y-4 h-[calc(100vh-250px)] overflow-y-auto">
-                                <!-- No cards here initially -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Table View -->
-                <div id="table-view" class="hidden">
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Company</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Role</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date Applied</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                                    <th scope="col" class="relative px-6 py-3">
-                                        <span class="sr-only">Actions</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-slate-200">
-                                <!-- Table Rows -->
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-md" src="https://placehold.co/40x40/c7d2fe/3730a3?text=G" alt="Google Logo">
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-slate-900">Google</div>
-                                                <div class="text-sm text-slate-500">Mountain View, CA</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800">Software Engineer Intern</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">-</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">Interested</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-md" src="https://placehold.co/40x40/dcfce7/166534?text=F" alt="Figma Logo">
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-slate-900">Figma</div>
-                                                <div class="text-sm text-slate-500">Remote</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800">Product Designer</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Jul 25, 2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-sky-100 text-sky-800">Applied</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-md" src="https://placehold.co/40x40/fee2e2/991b1b?text=A" alt="Adobe Logo">
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-slate-900">Adobe</div>
-                                                <div class="text-sm text-slate-500">San Jose, CA</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800">UX/UI Designer Intern</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Jul 15, 2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Interview</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <img class="h-10 w-10 rounded-md" src="https://placehold.co/40x40/f3e8ff/6b21a8?text=S" alt="Stripe Logo">
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-slate-900">Stripe</div>
-                                                <div class="text-sm text-slate-500">Remote</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800">Backend Engineer</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Jun 20, 2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Offer</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- Main Content -->
+            <main class="flex-1 overflow-x-auto p-4 sm:p-6 lg:p-8">
+                <div id="kanban-board" class="flex space-x-6 h-full">
+                    <!-- Kanban Columns will be injected by JavaScript -->
                 </div>
             </main>
         </div>
     </div>
 
     <!-- Add New Application Modal -->
-    <div id="add-new-modal" class="fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="modal-enter bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-slate-900">Add New Application</h2>
-                <button id="close-modal-btn" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <form>
-                <div class="space-y-4">
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal-backdrop hidden opacity-0">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4 transform transition-all scale-95 opacity-0" id="modal-panel">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <h2 class="text-2xl font-bold text-gray-900">Add New Application</h2>
+                    <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="new-job-form" class="mt-6 space-y-4">
                     <div>
-                        <label for="company-name" class="block text-sm font-medium text-slate-700">Company Name</label>
-                        <input type="text" id="company-name" class="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Google">
+                        <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                        <input type="text" id="company" name="company" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <div>
-                        <label for="job-title" class="block text-sm font-medium text-slate-700">Job Title</label>
-                        <input type="text" id="job-title" class="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Software Engineer">
+                        <label for="job-title" class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <input type="text" id="job-title" name="job-title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <div>
-                        <label for="status" class="block text-sm font-medium text-slate-700">Status</label>
-                        <select id="status" class="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option>Interested</option>
-                            <option>Applied</option>
-                            <option>Interview</option>
-                            <option>Offer</option>
-                            <option>Rejected</option>
+                        <label for="job-url" class="block text-sm font-medium text-gray-700">Job Post URL</label>
+                        <input type="url" id="job-url" name="job-url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                            <!-- Options will be populated by JS -->
                         </select>
                     </div>
-                    <div>
-                        <label for="date-applied" class="block text-sm font-medium text-slate-700">Date</label>
-                        <input type="date" id="date-applied" class="mt-1 block w-full border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            Add Application
+                        </button>
                     </div>
-                </div>
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" id="cancel-modal-btn" class="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50 focus:outline-none">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none">Save Application</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE & DATA ---
+            const columns = {
+                'wishlist': { title: 'Wishlist', color: 'bg-gray-200', textColor: 'text-gray-700' },
+                'applied': { title: 'Applied', color: 'bg-blue-200', textColor: 'text-blue-800' },
+                'interviewing': { title: 'Interviewing', color: 'bg-yellow-200', textColor: 'text-yellow-800' },
+                'offer': { title: 'Offer', color: 'bg-green-200', textColor: 'text-green-800' },
+                'rejected': { title: 'Rejected', color: 'bg-red-200', textColor: 'text-red-800' },
+            };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- Elements ---
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebar-toggle');
-            const profileButton = document.getElementById('profile-button');
-            const profileDropdown = document.getElementById('profile-dropdown');
-            
-            const kanbanViewBtn = document.getElementById('kanban-view-btn');
-            const tableViewBtn = document.getElementById('table-view-btn');
-            const kanbanView = document.getElementById('kanban-view');
-            const tableView = document.getElementById('table-view');
+            // Sample data to simulate what would come from a database
+            let jobs = [
+                { id: 1, company: 'Google', title: 'Frontend Engineer', status: 'interviewing', date: '2025-08-01' },
+                { id: 2, company: 'Meta', title: 'Full Stack Developer', status: 'applied', date: '2025-07-28' },
+                { id: 3, company: 'Netflix', title: 'Product Manager', status: 'wishlist', date: '2025-08-05' },
+                { id: 4, company: 'Amazon', title: 'Cloud Architect', status: 'rejected', date: '2025-07-15' },
+                { id: 5, company: 'Apple', title: 'iOS Developer', status: 'applied', date: '2025-08-02' },
+                { id: 6, company: 'Microsoft', title: 'Software Engineer', status: 'offer', date: '2025-07-20' },
+            ];
 
+            // --- DOM ELEMENTS ---
+            const kanbanBoard = document.getElementById('kanban-board');
+            const modal = document.getElementById('modal');
+            const modalPanel = document.getElementById('modal-panel');
             const addNewBtn = document.getElementById('add-new-btn');
-            const addNewModal = document.getElementById('add-new-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
-            const cancelModalBtn = document.getElementById('cancel-modal-btn');
+            const newJobForm = document.getElementById('new-job-form');
+            const statusSelect = document.getElementById('status');
 
-            // --- Sidebar Toggle for Mobile ---
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('-translate-x-full');
-            });
+            // --- FUNCTIONS ---
 
-            // --- Profile Dropdown Toggle ---
-            profileButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                profileDropdown.classList.toggle('hidden');
-            });
-            document.addEventListener('click', () => {
-                profileDropdown.classList.add('hidden');
-            });
+            /**
+             * Renders all columns and job cards to the board.
+             * This function is the main entry point for displaying data.
+             */
+            const renderBoard = () => {
+                kanbanBoard.innerHTML = ''; // Clear the board before re-rendering
+                
+                Object.keys(columns).forEach(statusKey => {
+                    const columnData = columns[statusKey];
+                    const columnEl = createColumnElement(statusKey, columnData);
+                    
+                    const jobsInColumn = jobs.filter(job => job.status === statusKey);
+                    const cardsContainer = columnEl.querySelector('.cards-container');
 
-            // --- View Switcher (Kanban/Table) ---
-            kanbanViewBtn.addEventListener('click', () => {
-                kanbanView.classList.remove('hidden');
-                tableView.classList.add('hidden');
-                kanbanViewBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-                tableViewBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-            });
+                    jobsInColumn.forEach(job => {
+                        const cardEl = createJobCardElement(job);
+                        cardsContainer.appendChild(cardEl);
+                    });
 
-            tableViewBtn.addEventListener('click', () => {
-                tableView.classList.remove('hidden');
-                kanbanView.classList.add('hidden');
-                tableViewBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-                kanbanViewBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-            });
+                    kanbanBoard.appendChild(columnEl);
+                });
+                
+                // Re-attach drag and drop listeners after rendering
+                setupDragAndDrop();
+            };
 
-            // --- Add New Application Modal ---
-            addNewBtn.addEventListener('click', () => {
-                addNewModal.classList.remove('hidden');
-            });
-            const closeModal = () => {
-                addNewModal.classList.add('hidden');
-            }
-            closeModalBtn.addEventListener('click', closeModal);
-            cancelModalBtn.addEventListener('click', closeModal);
-            addNewModal.addEventListener('click', (e) => {
-                if (e.target === addNewModal) {
-                    closeModal();
-                }
-            });
+            /**
+             * Creates the HTML for a single Kanban column.
+             * @param {string} statusKey - The key for the column (e.g., 'applied').
+             * @param {object} columnData - The column's metadata (title, color).
+             * @returns {HTMLElement} The created column element.
+             */
+            const createColumnElement = (statusKey, columnData) => {
+                const columnWrapper = document.createElement('div');
+                columnWrapper.className = 'kanban-column flex flex-col bg-gray-100 rounded-lg h-full';
+                columnWrapper.dataset.status = statusKey;
+                
+                columnWrapper.innerHTML = `
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-semibold ${columnData.textColor}">${columnData.title}</h2>
+                            <span class="text-sm font-medium ${columnData.color} ${columnData.textColor} rounded-full px-2 py-1">
+                                ${jobs.filter(j => j.status === statusKey).length}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cards-container flex-1 p-4 space-y-4 overflow-y-auto">
+                        <!-- Job cards go here -->
+                    </div>
+                `;
+                return columnWrapper;
+            };
 
+            /**
+             * Creates the HTML for a single job application card.
+             * @param {object} job - The job data object.
+             * @returns {HTMLElement} The created card element.
+             */
+            const createJobCardElement = (job) => {
+                const card = document.createElement('div');
+                card.className = 'job-card bg-white rounded-lg p-4 shadow-sm border border-gray-200';
+                card.draggable = true;
+                card.dataset.jobId = job.id;
 
-            // --- Kanban Drag and Drop ---
-            const cards = document.querySelectorAll('.kanban-card');
-            const columns = document.querySelectorAll('.kanban-column-content');
+                const columnData = columns[job.status];
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-gray-900">${job.company}</h3>
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full ${columnData.color} ${columnData.textColor}">${columnData.title}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">${job.title}</p>
+                    <p class="text-xs text-gray-400 mt-3">Applied: ${new Date(job.date).toLocaleDateString()}</p>
+                `;
+                return card;
+            };
 
-            cards.forEach(card => {
-                card.addEventListener('dragstart', () => {
-                    card.classList.add('dragging');
+            /**
+             * Sets up all drag and drop event listeners for the job cards and columns.
+             */
+            const setupDragAndDrop = () => {
+                const cards = document.querySelectorAll('.job-card');
+                const columns = document.querySelectorAll('.kanban-column .cards-container');
+
+                cards.forEach(card => {
+                    card.addEventListener('dragstart', () => {
+                        card.classList.add('dragging');
+                    });
+
+                    card.addEventListener('dragend', () => {
+                        card.classList.remove('dragging');
+                    });
                 });
 
-                card.addEventListener('dragend', () => {
-                    card.classList.remove('dragging');
-                });
-            });
+                columns.forEach(column => {
+                    column.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        const afterElement = getDragAfterElement(column, e.clientY);
+                        const dragging = document.querySelector('.dragging');
+                        if (afterElement == null) {
+                            column.appendChild(dragging);
+                        } else {
+                            column.insertBefore(dragging, afterElement);
+                        }
+                    });
 
-            columns.forEach(column => {
-                column.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    const afterElement = getDragAfterElement(column, e.clientY);
-                    const dragging = document.querySelector('.dragging');
-                    if (afterElement == null) {
-                        column.appendChild(dragging);
-                    } else {
-                        column.insertBefore(dragging, afterElement);
-                    }
-                });
-            });
+                    column.addEventListener('drop', e => {
+                        e.preventDefault();
+                        const draggingCard = document.querySelector('.dragging');
+                        const jobId = parseInt(draggingCard.dataset.jobId);
+                        const newStatus = column.closest('.kanban-column').dataset.status;
 
-            function getDragAfterElement(column, y) {
-                const draggableElements = [...column.querySelectorAll('.kanban-card:not(.dragging)')];
+                        // Update the job's status in our data
+                        const jobToUpdate = jobs.find(j => j.id === jobId);
+                        if (jobToUpdate) {
+                            jobToUpdate.status = newStatus;
+                        }
+                        
+                        // Re-render the entire board to reflect changes and update counts
+                        renderBoard();
+                    });
+                });
+            };
+            
+            /**
+             * Helper function to determine where to drop a card within a column.
+             */
+            const getDragAfterElement = (container, y) => {
+                const draggableElements = [...container.querySelectorAll('.job-card:not(.dragging)')];
 
                 return draggableElements.reduce((closest, child) => {
                     const box = child.getBoundingClientRect();
@@ -541,7 +333,76 @@
                         return closest;
                     }
                 }, { offset: Number.NEGATIVE_INFINITY }).element;
-            }
+            };
+
+            /**
+             * Opens the 'Add New Application' modal with a smooth transition.
+             */
+            const openModal = () => {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalPanel.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            };
+
+            /**
+             * Closes the modal with a smooth transition.
+             */
+            const closeModal = () => {
+                modalPanel.classList.add('scale-95', 'opacity-0');
+                modal.classList.add('opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            };
+            
+            /**
+             * Populates the status dropdown in the modal form.
+             */
+            const populateStatusDropdown = () => {
+                statusSelect.innerHTML = '';
+                Object.keys(columns).forEach(statusKey => {
+                    const option = document.createElement('option');
+                    option.value = statusKey;
+                    option.textContent = columns[statusKey].title;
+                    statusSelect.appendChild(option);
+                });
+            };
+
+            /**
+             * Handles the submission of the new job form.
+             */
+            const handleFormSubmit = (e) => {
+                e.preventDefault();
+                const formData = new FormData(newJobForm);
+                const newJob = {
+                    id: Date.now(), // Use timestamp for a unique ID
+                    company: formData.get('company'),
+                    title: formData.get('job-title'),
+                    status: formData.get('status'),
+                    date: new Date().toISOString().split('T')[0], // Today's date
+                    url: formData.get('job-url')
+                };
+                jobs.push(newJob);
+                newJobForm.reset();
+                closeModal();
+                renderBoard();
+            };
+
+            // --- EVENT LISTENERS ---
+            addNewBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            newJobForm.addEventListener('submit', handleFormSubmit);
+
+            // --- INITIALIZATION ---
+            populateStatusDropdown();
+            renderBoard();
         });
     </script>
 </body>
