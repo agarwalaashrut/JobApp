@@ -205,3 +205,25 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Python (Flask)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+.env
+venv/
+*.sqlite3
+
+# Node (React)
+node_modules/
+build/
+dist/
+.cache/
+.npm/
+*.log
+
+# Mac/Linux/Windows system files
+.DS_Store
+Thumbs.db

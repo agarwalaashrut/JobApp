@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-
 def scrape_job_listings(url):
     # Set up the Chrome WebDriver
     service = Service(ChromeDriverManager().install())
