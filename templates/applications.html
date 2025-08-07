@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/applications.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="logo">
+                    
+                    <h1>JobTrackr</h1>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <a href="#" class="nav-item active">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                    </svg>
+                    Applications
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                    Job Finder
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                    </svg>
+                    CV Editor
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                    Cover Letters
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                    </svg>
+                    Interviews
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="profile-section">
+                <a href="#" class="profile">
+                    <img class="profile-img" src="https://placehold.co/100x100/7c3aed/ffffff?text=U" alt="User avatar">
+                    <div class="profile-info">
+                        <p class="profile-name">User Name</p>
+                        <p class="profile-link">View profile</p>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="header">
+                <div class="header-content">
+                    <button id="add-btn" class="add-btn">
+                        <svg class="add-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                        </svg>
+                        New Application
+                    </button>
+                </div>
+            </header>
+
+            <main class="content">
+                <div id="kanban" class="kanban">
+                    <!-- Columns will be generated by JavaScript -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Application</h2>
+                <button id="close-btn" class="close-btn">
+                    <svg class="close-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="job-form" class="form">
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+                <div class="form-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">Job Post URL</label>
+                    <input type="url" id="url" name="url">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Add Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-overlay" class="app-overlay hidden">
+        <div class="app-overlay-content">
+            <div class="app-overlay-header">
+                <div class="current-app-info">
+                    <h2 id="overlay-company">Netflix</h2>
+                    <p id="overlay-title">Product Manager</p>
+                    <span id="overlay-status" class="status-badge wishlist">Wishlist</span>
+                </div>
+                <button id="close-overlay-btn" class="close-btn">
+                    <svg class="close-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="app-overlay-body">
+                <div class="action-grid">
+                    <!-- Quick Actions -->
+                    <div class="action-card quick-actions">
+                        <div class="action-card-header">
+                            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                            </svg>
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn primary">Apply Now</button>
+                            <button class="action-btn secondary">View Job Post</button>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="action-card">
+                        <div class="action-card-header">
+                            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            <h3>Notes & Thoughts</h3>
+                        </div>
+                        <p class="action-description">Keep track of your research and ideas</p>
+                        <button class="navigate-btn">
+                            <span>Open Notes</span>
+                            <svg class="navigate-arrow" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- CV Editor -->
+                    <div class="action-card">
+                        <div class="action-card-header">
+                            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            <h3>CV for this Application</h3>
+                        </div>
+                        <p class="action-description">Create and customize your resume</p>
+                        <button class="navigate-btn">
+                            <span>Edit CV</span>
+                            <svg class="navigate-arrow" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Cover Letter -->
+                    <div class="action-card">
+                        <div class="action-card-header">
+                            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                            </svg>
+                            <h3>Cover Letter & Questions</h3>
+                        </div>
+                        <p class="action-description">Write compelling application materials</p>
+                        <button class="navigate-btn">
+                            <span>Write Cover Letter</span>
+                            <svg class="navigate-arrow" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Interview Prep -->
+                    <div class="action-card">
+                        <div class="action-card-header">
+                            <svg class="action-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            </svg>
+                            <h3>Interview Preparation</h3>
+                        </div>
+                        <p class="action-description">Practice and prepare for interviews</p>
+                        <button class="navigate-btn">
+                            <span>Start Prep</span>
+                            <svg class="navigate-arrow" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configuration
+            const columns = {
+                'wishlist': { title: 'Wishlist', class: 'wishlist' },
+                'applied': { title: 'Applied', class: 'applied' },
+                'interviewing': { title: 'Interviewing', class: 'interviewing' },
+                'offer': { title: 'Offer', class: 'offer' },
+                'rejected': { title: 'Rejected', class: 'rejected' }
+            };
+
+            // Sample data
+            let jobs = [
+                { id: 1, company: 'Google', title: 'Frontend Engineer', status: 'interviewing', date: '2025-08-01' },
+                { id: 2, company: 'Meta', title: 'Full Stack Developer', status: 'applied', date: '2025-07-28' },
+                { id: 3, company: 'Netflix', title: 'Product Manager', status: 'wishlist', date: '2025-08-05' },
+                { id: 4, company: 'Amazon', title: 'Cloud Architect', status: 'rejected', date: '2025-07-15' },
+                { id: 5, company: 'Apple', title: 'iOS Developer', status: 'applied', date: '2025-08-02' },
+                { id: 6, company: 'Microsoft', title: 'Software Engineer', status: 'offer', date: '2025-07-20' }
+            ];
+
+            // DOM Elements
+            const kanban = document.getElementById('kanban');
+            const modal = document.getElementById('modal');
+            const addBtn = document.getElementById('add-btn');
+            const closeBtn = document.getElementById('close-btn');
+            const form = document.getElementById('job-form');
+            const statusSelect = document.getElementById('status');
+            
+            // Application overlay elements
+            const appOverlay = document.getElementById('app-overlay');
+            const closeOverlayBtn = document.getElementById('close-overlay-btn');
+            const overlayCompany = document.getElementById('overlay-company');
+            const overlayTitle = document.getElementById('overlay-title');
+            const overlayStatus = document.getElementById('overlay-status');
+
+            // Render board
+            const renderBoard = () => {
+                kanban.innerHTML = '';
+                
+                Object.keys(columns).forEach(statusKey => {
+                    const column = columns[statusKey];
+                    const columnEl = document.createElement('div');
+                    columnEl.className = `column ${column.class}`;
+                    columnEl.dataset.status = statusKey;
+                    
+                    const jobCount = jobs.filter(j => j.status === statusKey).length;
+                    columnEl.innerHTML = `
+                        <div class="column-header">
+                            <h2>${column.title}</h2>
+                            <span class="count">${jobCount}</span>
+                        </div>
+                        <div class="cards"></div>
+                    `;
+
+                    const cardsContainer = columnEl.querySelector('.cards');
+                    const columnJobs = jobs.filter(j => j.status === statusKey);
+                    
+                    columnJobs.forEach(job => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.draggable = true;
+                        card.dataset.jobId = job.id;
+                        card.addEventListener('click', () => openAppOverlay(job));
+                        card.innerHTML = `
+                            <div class="card-header">
+                                <h3>${job.company}</h3>
+                                <span class="status-badge ${job.status}">${columns[job.status].title}</span>
+                            </div>
+                            <p class="job-title">${job.title}</p>
+                            <p class="date">Applied: ${new Date(job.date).toLocaleDateString()}</p>
+                        `;
+                        cardsContainer.appendChild(card);
+                    });
+
+                    kanban.appendChild(columnEl);
+                });
+
+                setupDragDrop();
+            };
+
+            // Drag and drop
+            const setupDragDrop = () => {
+                const cards = document.querySelectorAll('.card');
+                const cardContainers = document.querySelectorAll('.cards');
+
+                cards.forEach(card => {
+                    card.addEventListener('dragstart', () => card.classList.add('dragging'));
+                    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+                });
+
+                cardContainers.forEach(container => {
+                    container.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        const afterEl = getDragAfterElement(container, e.clientY);
+                        const dragging = document.querySelector('.dragging');
+                        if (afterEl == null) {
+                            container.appendChild(dragging);
+                        } else {
+                            container.insertBefore(dragging, afterEl);
+                        }
+                    });
+
+                    container.addEventListener('drop', e => {
+                        e.preventDefault();
+                        const dragging = document.querySelector('.dragging');
+                        const jobId = parseInt(dragging.dataset.jobId);
+                        const newStatus = container.closest('.column').dataset.status;
+
+                        const job = jobs.find(j => j.id === jobId);
+                        if (job) job.status = newStatus;
+                        
+                        renderBoard();
+                    });
+                });
+            };
+
+            const getDragAfterElement = (container, y) => {
+                const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            };
+
+            // Application overlay functions
+            const openAppOverlay = (job) => {
+                overlayCompany.textContent = job.company;
+                overlayTitle.textContent = job.title;
+                overlayStatus.textContent = columns[job.status].title;
+                overlayStatus.className = `status-badge ${job.status}`;
+                
+                appOverlay.classList.remove('hidden');
+                setTimeout(() => appOverlay.classList.add('show'), 10);
+            };
+
+            const closeAppOverlay = () => {
+                appOverlay.classList.remove('show');
+                setTimeout(() => appOverlay.classList.add('hidden'), 300);
+            };
+
+            // Modal functions
+            const openModal = () => {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('show'), 10);
+            };
+
+            const closeModal = () => {
+                modal.classList.remove('show');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            };
+
+            // Form handling
+            const populateStatusSelect = () => {
+                statusSelect.innerHTML = '';
+                Object.keys(columns).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = columns[key].title;
+                    statusSelect.appendChild(option);
+                });
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const newJob = {
+                    id: Date.now(),
+                    company: formData.get('company'),
+                    title: formData.get('title'),
+                    status: formData.get('status'),
+                    date: new Date().toISOString().split('T')[0],
+                    url: formData.get('url')
+                };
+                jobs.push(newJob);
+                form.reset();
+                closeModal();
+                renderBoard();
+            };
+
+            // Event listeners
+            addBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            closeOverlayBtn.addEventListener('click', closeAppOverlay);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            appOverlay.addEventListener('click', (e) => {
+                if (e.target === appOverlay) closeAppOverlay();
+            });
+            form.addEventListener('submit', handleSubmit);
+
+            // Initialize
+            populateStatusSelect();
+            renderBoard();
+        });
+    </script>
+</body>
+</html>

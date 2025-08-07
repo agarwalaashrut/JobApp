@@ -14,9 +14,9 @@ def result():
     # Process job_data and get results (this part would involve your scraping logic)
     return render_template('result.html', job_data=job_data)
 
-@app.route('/dashboard')
+@app.route('/applications')
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('applications.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
